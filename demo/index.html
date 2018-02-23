@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>DCF77.js</title>
+	<link rel="stylesheet" href="style/main.css">
+</head>
+<body>
+
+<div id="logo">
+	<h1>DCF77.js</h1>
+	<h4>DCF77 Web Audio Simulator</h4>
+</div>
+
+<div id="container">
+	<div id="mainText">
+		<div class="bodyText">A proof-of-concept <a href="https://en.wikipedia.org/wiki/DCF77">DCF77</a>
+			time signal simulator written in JavaScript, using Web Audio API. This page works correctly on Firefox and Chrome.
+			You can use this web page to synchronise your DCF77-radio-controlled clocks/watches. Set your radio controlled
+			clock/watch to “receive” mode and place it near the speaker or headphones. It should take 2–10 minutes for your
+			watch to synchronize.
+		</div>
+		<br>
+		<div class="bodyText">The transmitted signal is automatically in correct UTC+1 timezone
+			(DCF77 signal time). Some filtering is applied to the signal, to make it less harsh on
+			ears and to improve the signal quality. Nevertheless, the signal is a <span class="warning">high-pitched 15.5kHz sine wave</span>,
+			so please protect your hearing! The signal has been successfully tested on a Casio Wave Ceptor watch and a radio controlled wall clock.
+		</div>
+		<br>
+		<div class="bodyText">
+			<h5>This project was inspired by these resources:</h5>
+			<ul>
+				<li><a href="http://jjy.831337.xyz/">JJY.js</a></li>
+				<li><a href="http://bastianborn.de/radio-clock-hack">How to manipulate a radio controlled clock via speaker by
+					Bastian Born</a></li>
+				<li><a href="http://0x7.ch/text/dcf77.pdf">Cheating Time - How to build your own DCF77 transmitter (<span class="sc">.pdf</span>)</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="controlContainer">
+		<div id="clockDiv"></div>
+		<div id="clockText">
+			<span id="timeText">Current DCF77 time:</span><br>
+			<span id="time"></span><br>
+			<span id="timezone">(UTC+1)</span><br>
+		</div>
+		<a id="transmissionButton" class="blackButton">
+			Start Transmission
+		</a>
+	</div>
+</div>
+
+<script src="script/snap.svg-min.js"></script>
+<script src="../DCF77.js"></script>
+<script src="script/clock.js"></script>
+<script src="script/main.js"></script>
+
+</body>
+</html>

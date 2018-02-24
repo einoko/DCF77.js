@@ -14,7 +14,7 @@ Set your radio controlled clock/watch to “receive” mode and place it near th
 ## Usage
 Include the script in your HTML file.
 
-```js
+```html
 <script src="DCF77.js"></script>
 ```
 

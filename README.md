@@ -20,9 +20,7 @@ Include the script in your HTML file.
 
 DCF77.js exposes two methods, `startTransmission()` and `stopTransmission()`. Use these to start and stop the signal transmission. You can check the demo page in `/demo` to see an example.
 
-***
-
-### Disclaimer:
+#### Disclaimer:
 __This script will produce a high-pitched 15.5kHz sine wave noise! Please protect your hearing! Also, it may or may not be legal to transmit this sound in your country. Consult your local laws if you are unsure.__
 
 ## Instructions

@@ -22,44 +22,40 @@ const DCF77 = (() => {
   let audioCtx = new AudioContext();
   let lowshelfFilter, gainNode;
 
-  const ZERO = createSecond(FREQUENCY, 0.1);
-  const ONE = createSecond(FREQUENCY, 0.2);
-  const END = createSecond(FREQUENCY, 0);
-
-  function concat(input, n) {
+  const concat = (input, n) => {
     return Array(++n).join(input);
-  }
+  };
 
-  function addMinutes(date, minutes) {
+  const addMinutes = (date, minutes) => {
     return new Date(date.getTime() + minutes * 60000);
-  }
+  };
 
-  function evenParity(input) {
+  const evenParity = (input) => {
     return (input.match(/1/g) || []).length % 2;
-  }
+  };
 
-  function reverse(string) {
+  const reverse = (string) => {
     return string
       .split("")
       .reverse()
       .join("");
-  }
+  };
 
-  function binary(input, size) {
+  const binary = (input, size) => {
     const bin = input.toString(2);
     return reverse(bin) + concat(0, size - bin.length);
-  }
+  };
 
-  function isDST(t) {
+  const isDST = (t) => {
     const jan = new Date(t.getFullYear(), 0, 1);
     const jul = new Date(t.getFullYear(), 6, 1);
     return (
       Math.min(jan.getTimezoneOffset(), jul.getTimezoneOffset()) ===
       t.getTimezoneOffset()
     );
-  }
+  };
 
-  function bcd(input, size) {
+  const bcd = (input, size) => {
     if (size <= 4) {
       return binary(input, size);
     } else {
@@ -67,9 +63,9 @@ const DCF77 = (() => {
       let tens = binary(Math.floor(input / 10), size - 4);
       return ones + tens;
     }
-  }
+  };
 
-  function getUTC() {
+  const getUTC = () => {
     let currentTime = new Date();
     return new Date(
       currentTime.getUTCFullYear(),
@@ -79,9 +75,9 @@ const DCF77 = (() => {
       currentTime.getUTCMinutes(),
       currentTime.getUTCSeconds()
     );
-  }
+  };
 
-  function generateMinute(d) {
+  const generateMinute = (d) => {
     let minute = String();
 
     // first 17 "useless" bits
@@ -124,9 +120,9 @@ const DCF77 = (() => {
     minute += SPECIAL_BIT;
 
     return minute;
-  }
+  };
 
-  function playMinute(arr) {
+  const playMinute = (arr) => {
     let buffer = audioCtx.createBuffer(1, arr.length, audioCtx.sampleRate);
     buffer.copyToChannel(arr, 0);
 
@@ -152,15 +148,18 @@ const DCF77 = (() => {
       playMinute(FIRST_UPCOMING_MINUTE);
       setTimeout(createNextMinute, 5000);
     };
-  }
+  };
 
-  function createNextMinute() {
+  const createNextMinute = () => {
     SECOND_UPCOMING_MINUTE = createMinute(2);
-  }
+  };
 
-  function createMinute(n) {
+  const createMinute = (n) => {
     const currentTime = getUTC();
-    let DE_time = new Date(currentTime.setHours(currentTime.getHours() + 1));
+    const difference = isDST(currentTime) ? 2 : 1;
+    let DE_time = new Date(
+      currentTime.setHours(currentTime.getHours() + difference)
+    );
     DE_time = addMinutes(DE_time, n);
     let sequence = generateMinute(DE_time);
     let minute = new Float32Array(audioCtx.sampleRate * 60);
@@ -179,9 +178,9 @@ const DCF77 = (() => {
     });
 
     return minute;
-  }
+  };
 
-  function start() {
+  const start = () => {
     FIRST_UPCOMING_MINUTE = createMinute(1);
     SECOND_UPCOMING_MINUTE = createMinute(2);
     audioCtx = new AudioContext();
@@ -192,13 +191,13 @@ const DCF77 = (() => {
     playMinute(
       FIRST_UPCOMING_MINUTE.slice(new Date().getSeconds() * audioCtx.sampleRate)
     );
-  }
+  };
 
-  function stop() {
+  const stop = () => {
     audioCtx.close();
-  }
+  };
 
-  function sine(sampleNumber, tone) {
+  const sine = (sampleNumber, tone) => {
     const distorter = audioCtx.sampleRate / 3;
     const sampleFreq = audioCtx.sampleRate / tone;
     return (
@@ -206,9 +205,9 @@ const DCF77 = (() => {
         Math.sin(sampleNumber / (sampleFreq / (Math.PI * 2))) * distorter
       ) / distorter
     );
-  }
+  };
 
-  function createSecond(freq, ampMod) {
+  const createSecond = (freq, ampMod) => {
     let second = [];
 
     for (let i = 0; i < audioCtx.sampleRate; i++) {
@@ -219,13 +218,18 @@ const DCF77 = (() => {
       }
     }
     return second;
-  }
+  };
+
+  // Create second information here
+  const ZERO = createSecond(FREQUENCY, 0.1);
+  const ONE = createSecond(FREQUENCY, 0.2);
+  const END = createSecond(FREQUENCY, 0);
 
   return {
-    startTransmission: function() {
+    startTransmission: () => {
       start();
     },
-    stopTransmission: function() {
+    stopTransmission: () => {
       stop();
     }
   };

@@ -41,7 +41,9 @@ let Clock = (function() {
       currentTime.getUTCFullYear(),
       currentTime.getUTCMonth(),
       currentTime.getUTCDate(),
-      currentTime.getUTCHours() + 1,
+      isDST(currentTime)
+        ? currentTime.getUTCHours() + 2
+        : currentTime.getUTCHours() + 1,
       currentTime.getUTCMinutes(),
       currentTime.getUTCSeconds()
     );
@@ -55,6 +57,15 @@ let Clock = (function() {
     document.getElementById("time").innerText = `${hours}:${(
       "00" + minutes
     ).slice(-2)}:${("00" + seconds).slice(-2)}`;
+  }
+
+  function isDST(t) {
+    const jan = new Date(t.getFullYear(), 0, 1);
+    const jul = new Date(t.getFullYear(), 6, 1);
+    return (
+      Math.min(jan.getTimezoneOffset(), jul.getTimezoneOffset()) ===
+      t.getTimezoneOffset()
+    );
   }
 
   function refresh() {

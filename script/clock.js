@@ -3,6 +3,11 @@ let Clock = (function() {
   let s = Snap("#clockDiv");
 
   function initialize() {
+    // Insert correct UTC info
+    Array.from(document.getElementsByClassName("correctTimezone")).map(
+      el => (el.innerText = isDST(new Date()) ? "UTC+2" : "UTC+1")
+    );
+    
     Snap.load("resources/clock.svg", function(f) {
       second = f.select("#second_hand");
       minute = f.select("#minute_hand");

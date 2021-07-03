@@ -4,7 +4,7 @@
  * license: MIT
  *
  * DCF77.js exposes two public methods, startTransmission and stopTransmission,
- * which should be pretty self-explanatory.
+ * which start and stop the time signal transmission respectively.
  *
  * NOTE! Please bear in mind that this script will produce a high-pitched
  * 15.5 kHz sine wave noise. Never play this signal at full volume and be sure
@@ -22,7 +22,7 @@ const DCF77 = (() => {
   let audioCtx = new AudioContext();
   let lowshelfFilter, gainNode;
 
-  const concat = (input, n) => {
+  const repeatString = (input, n) => {
     return Array(++n).join(input);
   };
 
@@ -35,15 +35,12 @@ const DCF77 = (() => {
   };
 
   const reverse = (string) => {
-    return string
-      .split("")
-      .reverse()
-      .join("");
+    return string.split("").reverse().join("");
   };
 
   const binary = (input, size) => {
     const bin = input.toString(2);
-    return reverse(bin) + concat(0, size - bin.length);
+    return reverse(bin) + repeatString(0, size - bin.length);
   };
 
   const isDST = (t) => {
@@ -143,7 +140,7 @@ const DCF77 = (() => {
     lowshelfFilter.connect(gainNode);
     gainNode.connect(audioCtx.destination);
     source.start(0);
-    source.onended = function() {
+    source.onended = function () {
       FIRST_UPCOMING_MINUTE = SECOND_UPCOMING_MINUTE;
       playMinute(FIRST_UPCOMING_MINUTE);
       setTimeout(createNextMinute, 5000);
@@ -180,14 +177,15 @@ const DCF77 = (() => {
     return minute;
   };
 
-  const start = () => {
+  const start = async () => {
     FIRST_UPCOMING_MINUTE = createMinute(1);
     SECOND_UPCOMING_MINUTE = createMinute(2);
     audioCtx = new AudioContext();
-    const currentSecond = new Date().getSeconds();
-    while (new Date().getSeconds() === currentSecond) {
-      // do nothing
-    }
+
+    await new Promise((r) =>
+      setTimeout(r, 1000 - new Date().getMilliseconds())
+    );
+
     playMinute(
       FIRST_UPCOMING_MINUTE.slice(new Date().getSeconds() * audioCtx.sampleRate)
     );
@@ -231,6 +229,6 @@ const DCF77 = (() => {
     },
     stopTransmission: () => {
       stop();
-    }
+    },
   };
 })();

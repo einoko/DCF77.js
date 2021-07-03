@@ -1,12 +1,7 @@
-let toggle = false;
-const transmissionButton = document.getElementById("transmissionButton");
+const buttonHandler = () => {
+  const isiOS = !!navigator.platform.match(/iPhone|iPod|iPad/);
 
-Clock.start();
-
-transmissionButton.addEventListener("click", buttonHandler, false);
-
-function buttonHandler() {
-  // check for first time users
+  // check for first time users on non iOS devices
   if (localStorage.getItem("firstTime") === null) {
     if (
       window.confirm(
@@ -15,19 +10,28 @@ function buttonHandler() {
     ) {
       transmissionControl();
       localStorage.setItem("firstTime", "false");
+      if (isiOS) transmissionControl();
     }
   } else {
     transmissionControl();
   }
-}
+};
 
-function transmissionControl() {
+const transmissionControl = () => {
   if (!toggle) {
     DCF77.startTransmission();
-    transmissionButton.innerText = "Stop Transmission";
+    transmissionButton.innerText = "STOP TRANSMISSION";
   } else {
     DCF77.stopTransmission();
-    transmissionButton.innerText = "Start Transmission";
+    transmissionButton.innerText = "START TRANSMISSION";
   }
   toggle = !toggle;
-}
+};
+
+let toggle = false;
+
+const transmissionButton = document.getElementById("transmissionButton");
+
+Clock.start();
+
+transmissionButton.addEventListener("click", buttonHandler, false);

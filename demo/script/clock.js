@@ -1,23 +1,23 @@
-let Clock = (function() {
+let Clock = (() => {
   let second, minute, hour;
   let s = Snap("#clockDiv");
 
-  function initialize() {
+  const initialize = () => {
     // Insert correct UTC info
     Array.from(document.getElementsByClassName("correctTimezone")).map(
-      el => (el.innerText = isDST(new Date()) ? "UTC+2" : "UTC+1")
+      (el) => (el.innerText = isDST(new Date()) ? "UTC+2" : "UTC+1")
     );
-    
-    Snap.load("resources/clock.svg", function(f) {
+
+    Snap.load("resources/clock.svg", function (f) {
       second = f.select("#second_hand");
       minute = f.select("#minute_hand");
       hour = f.select("#hour_hand");
       s.append(f);
     });
     setTimeout(refresh, 1000 - new Date().getMilliseconds());
-  }
+  };
 
-  function animateTime() {
+  const animateTime = () => {
     let timeNow = getDETime();
     let hours = timeNow.getHours();
     let minutes = timeNow.getMinutes();
@@ -38,50 +38,63 @@ let Clock = (function() {
       );
     }
     hour.transform(`r${hours * 30 + minutes / 2},190,190`);
-  }
+  };
 
-  function getDETime() {
+  const getDETime = () => {
+    const currentTime = getUTC();
+    const difference = isDST(currentTime) ? 2 : 1;
+    return new Date(currentTime.setHours(currentTime.getHours() + difference));
+  };
+
+  const updateTextClock = () => {
+    let timeNow = getDETime();
+    let hours = timeNow.getHours();
+    let minutes = timeNow.getMinutes();
+    let seconds = timeNow.getSeconds();
+    document.getElementById("date").innerText = `${timeNow.toLocaleDateString(
+      "en-gb",
+      {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        timezone: "Europe/Berlin",
+      }
+    )}`;
+    document.getElementById("time").innerText = `${hours}:${(
+      "00" + minutes
+    ).slice(-2)}:${("00" + seconds).slice(-2)}`;
+  };
+
+  const getUTC = () => {
     let currentTime = new Date();
     return new Date(
       currentTime.getUTCFullYear(),
       currentTime.getUTCMonth(),
       currentTime.getUTCDate(),
-      isDST(currentTime)
-        ? currentTime.getUTCHours() + 2
-        : currentTime.getUTCHours() + 1,
+      currentTime.getUTCHours(),
       currentTime.getUTCMinutes(),
       currentTime.getUTCSeconds()
     );
-  }
+  };
 
-  function updateTextClock() {
-    let timeNow = getDETime();
-    let hours = timeNow.getHours();
-    let minutes = timeNow.getMinutes();
-    let seconds = timeNow.getSeconds();
-    document.getElementById("time").innerText = `${hours}:${(
-      "00" + minutes
-    ).slice(-2)}:${("00" + seconds).slice(-2)}`;
-  }
-
-  function isDST(t) {
+  const isDST = (t) => {
     const jan = new Date(t.getFullYear(), 0, 1);
     const jul = new Date(t.getFullYear(), 6, 1);
     return (
       Math.min(jan.getTimezoneOffset(), jul.getTimezoneOffset()) ===
       t.getTimezoneOffset()
     );
-  }
+  };
 
-  function refresh() {
+  const refresh = () => {
     animateTime();
     updateTextClock();
     setTimeout(refresh, 1000 - new Date().getMilliseconds());
-  }
+  };
 
   return {
-    start: function() {
+    start: () => {
       initialize();
-    }
+    },
   };
 })();

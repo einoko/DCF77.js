@@ -1,6 +1,6 @@
 # DCF77.js
 
-#### Demo available [here](https://sumire-io.github.io/DCF77.js/).
+#### Demo available [here](https://einoken.github.io/DCF77.js/).
 
 DCF77.js is a proof-of-concept [DCF77](https://en.wikipedia.org/wiki/DCF77) time signal emulator written in JavaScript and its Web Audio API. It currently works correctly on Firefox, Chrome and Chromium based browsers. You can use DCF77.js to synchronise your DCF77-radio-controlled clocks/watches. You can check out the [demo page](https://sumire-io.github.io/DCF77.js/) to see how it can be implemented on a web page.
 

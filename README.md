@@ -2,7 +2,7 @@
 
 #### Demo available [here](https://einoken.github.io/DCF77.js/).
 
-DCF77.js is a proof-of-concept [DCF77](https://en.wikipedia.org/wiki/DCF77) time signal emulator written in JavaScript and its Web Audio API. It currently works correctly on Firefox, Chrome and Chromium based browsers. You can use DCF77.js to synchronise your DCF77-radio-controlled clocks/watches. You can check out the [demo page](https://sumire-io.github.io/DCF77.js/) to see how it can be implemented on a web page.
+DCF77.js is a proof-of-concept [DCF77](https://en.wikipedia.org/wiki/DCF77) time signal emulator written in JavaScript and its Web Audio API. It currently works correctly on Firefox, Chrome and Chromium based browsers. You can use DCF77.js to synchronise your DCF77-radio-controlled clocks/watches. You can check out the [demo page](https://einoken.github.io/DCF77.js/) to see how it can be implemented on a web page.
 
 Set your radio controlled clock/watch to “receive” mode and place it near the speaker or headphones. It should take 2–10 minutes for your watch to synchronize.
 
